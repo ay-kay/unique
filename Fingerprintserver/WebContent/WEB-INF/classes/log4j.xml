@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
+
+	<appender name="FilesystemAppender" class="org.apache.log4j.DailyRollingFileAppender">
+		<param name="datePattern" value="'.'dd-MM-yyyy" />
+		<param name="file" value="${catalina.base}/logs/FingerprintServer.log" />
+		<param name="Append" value="true" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d %p [%c{2}] - %l - %m%n" />
+		</layout>
+	</appender>
+
+	<appender name="MongoAppender"
+		class="com.nesolabs.FingerprintServer.logging.MongoAppender">
+		<param name="host" value="localhost" />
+		<param name="port" value="27017" />
+		<param name="database" value="logs" />
+		<param name="collectionPattern" value="%c" />
+		<param name="username" value="loguser" />
+		<param name="password" value="rWADBNA123" />
+
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d %p [%c{2}] - %m%n" />
+		</layout>
+	</appender>
+	
+	<appender name="ProwlAppender" class="com.nesolabs.FingerprintServer.logging.ProwlAppender">
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d %p [%c{2}] - %l - %m%n" />
+		</layout>
+	</appender>
+
+	<logger name="MongoLogger" additivity="false">
+		<level value="INFO" />
+		<appender-ref ref="MongoAppender" />
+	</logger>
+
+	<root>
+		<priority value="INFO" />
+		<appender-ref ref="FilesystemAppender" />
+		<priority value="ERROR" />
+		<appender-ref ref="ProwlAppender" />
+	</root>
+
+</log4j:configuration>
